@@ -40,10 +40,12 @@ class Histogram implements Callable<Integer> {
     @Option(names = { "-ext", "--extensions" }, description = "Path for read code")
     private String extensions;
 
+    @Option(names = { "-s", "--size" }, description = "Number of words to be printed", defaultValue = "15")
+    private int size;
+
     public static void main(String... args) {
         STOP_WORDS = readLines(Paths.get("stopwords-pt-BR.txt").toFile()).collect(Collectors.toSet());
         TRASH = readLines(Paths.get("trash.txt").toFile()).collect(Collectors.toSet());
-        System.out.println(STOP_WORDS);
         int exitCode = new CommandLine(new Histogram()).execute(args);
         System.exit(exitCode);
     }
@@ -73,7 +75,7 @@ class Histogram implements Callable<Integer> {
         histogram.entrySet()
                 .stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                .limit(15)
+                .limit(size)
                 .forEachOrdered(entry -> {
                     System.out.println(entry);
                 });
